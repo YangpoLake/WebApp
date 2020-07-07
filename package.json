@@ -1,0 +1,23 @@
+{
+  "name": "WebApp",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "axios": "0.19.2",
+    "echarts": "4.8.0",
+    "element-ui": "2.13.2",
+    "js-cookie": "^2.2.1",
+    "lodash": "4.17.15",
+    "vue": "3.0.0-beta.15",
+    "vue-i18n": "8.18.2",
+    "vue-router": "4.0.0-beta.1",
+    "vuex": "3.5.1"
+  },
+  "devDependencies": {
+    "vite": "1.0.0-beta.3",
+    "@vue/compiler-sfc": "3.0.0-beta.15"
+  }
+}
