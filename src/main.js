@@ -1,14 +1,56 @@
-import { createApp } from "vue";
-import App from "./App.vue";
-import router from "./router";
-import store from "./store/index";
-import i18n from "./lang/index";
-import "./index.css";
+import Vue from 'vue'
 
-const app = createApp(App);
+import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
-app.use(router);
-app.use(store);
-app.use(i18n);
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import i18n from './language'
+import locale from 'element-ui/lib/locale/lang/zh-CN' // lang i18n
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 
-app.mount('#app');
+import '@/styles/index.scss' // global css
+
+import App from './App'
+import store from './store'
+import router from './router'
+import filters from './filters';
+
+import '@/icons' // icon
+import '@/permission' // permission control
+import '@/iconfont/iconfont.css';
+import '@/interceptors/http';
+
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
+Vue.prototype.$filters = filters;
+
+/**
+ * If you don't want to use mock-server
+ * you want to use MockJs for mock api
+ * you can execute: mockXHR()
+ *
+ * Currently MockJs will be used in the production environment,
+ * please remove it before going online ! ! !
+ */
+if (process.env.NODE_ENV === 'production') {
+  const { mockXHR } = require('../mock')
+  mockXHR()
+}
+
+// set ElementUI lang to EN
+Vue.use(ElementUI, { locale })
+// 如果想要中文版 element-ui，按如下方式声明
+// Vue.use(ElementUI)
+Vue.use(mavonEditor);
+
+Vue.config.productionTip = false
+
+new Vue({
+  el: '#app',
+  i18n,
+  router,
+  store,
+  render: h => h(App)
+})

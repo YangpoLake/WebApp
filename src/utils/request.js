@@ -1,97 +1,71 @@
-import axios from "axios";
-import { debounce } from "lodash";
-import { ElMessage as Message } from "element-ui";
-import i18n from "../lang";
-import router from "../router";
-import authModule from "../store/modules/auth.js";
-import appModule from "../store/modules/app.js";
+import axios from 'axios'
+import { MessageBox, Message } from 'element-ui'
+import store from '@/store'
+import { getToken } from '@/utils/auth'
 
-const responseStatus401 = debounce((res) => {
-  if (res.config.url !== "/api/tunny/logout") { // 登出接口发生鉴权失败是不做处理
-    authModule.LogOut();
+// create an axios instance
+const service = axios.create({
+  baseURL: process.env.VUE_APP_BACKEND_BASE_API, // url = base url + request url
+  // withCredentials: true, // send cookies when cross-domain requests
+  timeout: 500 // request timeout
+})
+
+// request interceptor
+service.interceptors.request.use(
+  config => {
+    // do something before request is sent
+
+    if (store.getters.token) {
+      // let each request carry token
+      // ['X-Token'] is a custom headers key
+      // please modify it according to the actual situation
+      config.headers['X-Token'] = getToken()
+    }
+    return config
+  },
+  error => {
+    // do something with request error
+    console.log(error) // for debug
+    return Promise.reject(error)
   }
-  router.push("/login");
-}, 2000);
-const responseStatus504 = debounce(() => {
-  Message({
-    message: i18n.t("requestTimeout").toString(),
-    type: "warning"
-  });
-}, 2000);
-const responseStatus500 = debounce(() => {
-  Message({
-    message: i18n.t("requestError").toString(),
-    type: "warning"
-  });
-}, 2000);
+)
 
-function createService(baseURL = "/") {
-  const service = axios.create({
-    baseURL: baseURL, // url = base url + request url
-    timeout: 5000
-    // withCredentials: true // send cookies when cross-domain requests
-  });
+// response interceptor
+service.interceptors.response.use(
+  /**
+   * If you want to get http information such as headers or status
+   * Please return  response => response
+  */
 
-  // Request interceptors
-  service.interceptors.request.use(
-    (config) => {
-      // Add X-Access-Token header to every request, you can add other custom headers here
-      if (authModule.token) {
-        config.headers["X-Access-Token"] = authModule.token;
-        config.headers.Authorization = "JWT " + authModule.token;
-        config.headers["Content-Type"] = "application/json;charset=UTF-8";
-        config.headers["Accept-Language"] = appModule.language === "zh" ? "zh-Hans" : "en-US"; // 让每个请求携带中英文标志
-      }
-      return config;
-    },
-    (error) => {
-      Promise.reject(error);
+  /**
+   * Determine the request status by custom code
+   * Here is just an example
+   * You can also judge the status by HTTP Status Code
+   */
+  response => {
+    const res = response ? response.data : {};
+
+    // if the custom code is not 20000, it is judged as an error.
+    if (res.code !== 200) {
+      Message({
+        message: res.message || 'Error',
+        type: 'error',
+        duration: 5 * 1000
+      })
+      return Promise.reject(new Error(res.message || 'Error'))
+    } else {
+      return res || {}
     }
-  );
+  },
+  error => {
+    console.log('err' + error) // for debug
+    Message({
+      message: error.message,
+      type: 'error',
+      duration: 5 * 1000
+    })
+    return Promise.reject(error)
+  }
+)
 
-  // Response interceptors
-  service.interceptors.response.use(
-    (response) => {
-      console.log(response);
-      const res = response.data;
-      if (!/[2][0-9]*/.test(response.status.toString())) {
-        Message({
-          message: res.message || "Error",
-          type: "error",
-          duration: 5 * 1000
-        });
-        if (response.status === 401) {
-          authModule.ResetToken();
-          location.reload(); // To prevent bugs from vue-router
-        }
-        return Promise.reject(new Error(res.message || "Error"));
-      } else {
-        return response.data;
-      }
-    },
-    (error) => {
-      console.log(error);
-      console.log(error.request);
-      console.log(error.response);
-      if (error.response) {
-        switch (error.response.status) {
-          case 401:
-            responseStatus401(error.response);
-            break;
-          case 504:
-            responseStatus504();
-            break;
-          case 500:
-            responseStatus500();
-            break;
-        }
-      }
-      return Promise.reject(error);
-    }
-  );
-
-  return service;
-}
-
-export const authRequest = createService(process.env.VUE_APP_AUTN_BASE_API);
-export const mainRequest = createService(process.env.VUE_APP_MAIN_BASE_API);
+export default service

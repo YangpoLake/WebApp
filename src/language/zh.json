@@ -1,0 +1,66 @@
+{
+  "common": {
+    "language": "中文",
+    "please_input": "请填写",
+    "name": "名称",
+    "status": "状态",
+    "position": "位置",
+    "create_time": "创建时间",
+    "update_time": "更新时间",
+    "logout": "注销"
+  },
+  "menu": {
+    "dashboard": "仪表盘",
+    "model_map": "模型地图",
+    "tourist": "游客管理",
+    "operation": "运维人员管理",
+    "admin": "管理员管理",
+    "home": "主页",
+    "user": "用户",
+    "facilitie": "设施",
+    "camera": "摄像头管理",
+    "streetlight": "路灯管理",
+    "app_data": "应用数据",
+    "banner": "海报图管理",
+    "activity": "活动管理"
+  },
+  "message": {
+    "get_data_fail": "获取数据失败，请重试，如多次失败，请联系管理员！",
+    "update_fail": "修改数据失败，请重试，如多次失败，请联系管理员！",
+    "delete_fail": "删除数据失败，请重试，如多次失败，请联系管理员！",
+    "create_fail": "新建数据失败，请重试，如多次失败，请联系管理员！",
+
+    "update_success": "修改数据成功！",
+    "delete_success": "删除数据成功！",
+    "create_success": "新建数据成功！"
+  },
+  "botton": {
+    "search": "搜索",
+    "confirm": "确定",
+    "create": "新建",
+    "submit": "提交",
+    "delete": "删除",
+    "batch_delete": "批量删除",
+    "cancel": "取消"
+  },
+  "dialop": {
+    "create": "新建",
+    "delete": "删除",
+    "batch_delete": "批量删除",
+    "delete_tips": "是否删除以下数据，此操作不可逆"
+  },
+  "form_role_message": {
+    "required": "不可为空"
+  },
+  "dashboard": {},
+  "user": {
+    "admin_manage": "管理员管理",
+    "account": "账号",
+    "phone_number": "电话号码"
+  },
+  "facilitie": {
+    "camera_manage": "摄像头管理",
+    "streetlight_manage": "路灯管理",
+    "facilitie_number": "编号"
+  }
+}
