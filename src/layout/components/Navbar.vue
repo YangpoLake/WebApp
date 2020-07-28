@@ -7,7 +7,7 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click" size="small">
         <div class="avatar-wrapper">
-          <img :src="avatar ? avatar : 'http://localhost:10233/user_avatar.png'" class="user-avatar">
+          <img :src="avatar ? avatar : '/user_avatar.png'" class="user-avatar">
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <el-dropdown-item @click.native="logout">

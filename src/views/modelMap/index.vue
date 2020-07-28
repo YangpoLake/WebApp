@@ -2,15 +2,17 @@
   <div class="map-container">
     <div class="map">
       <image-map v-if="current === 'image'" />
+      <model-map v-if="current === 'model'" />
     </div>
   </div>
 </template>
 
 <script>
 import ImageMap from "./imageMap";
+import ModelMap from "./modelMap";
 
 export default {
-  components: { ImageMap },
+  components: { ImageMap, ModelMap },
   data() {
     return {
       current: "image"

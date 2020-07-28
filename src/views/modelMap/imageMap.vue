@@ -6,8 +6,8 @@
       @mousemove="changeCanvasCenter"
     ></canvas>
     <el-button icon="el-icon-menu" circle class="canvas-contrl menu" @click="toDashboardPage"></el-button>
-    <el-button type="primary" icon="el-icon-minus" circle @click="changeImageScaling(imageScaling - 1)" class="canvas-contrl scaling-minus"></el-button>
-    <el-button type="primary" icon="el-icon-plus" circle @click="changeImageScaling(imageScaling + 1)" class="canvas-contrl scaling-plus"></el-button>
+    <el-button type="primary" icon="el-icon-minus" circle @click="changeImageScaling(imageScaling/2)" class="canvas-contrl scaling-minus"></el-button>
+    <el-button type="primary" icon="el-icon-plus" circle @click="changeImageScaling(imageScaling*2)" class="canvas-contrl scaling-plus"></el-button>
     <el-button icon="el-icon-office-building" circle class="canvas-contrl model"></el-button>
   </div>
 </template>
@@ -16,65 +16,21 @@
 export default {
   data() {
     return {
-      canvasCenter: [100, 100],
+      canvasCenter: [0, 0],
       canvasWidth: window.innerWidth * 2,
       canvasHeight: window.innerHeight * 2,
       canvasContext: {},
       canvasCanMove: false,
-      imageSize: [336, 194],
+      imageSize: [583, 231],
       imageScaling: 1,
       imageList: [
-        {
-          x: -336,
-          y: -194,
-          url: "http://localhost:10233/testMap.png"
-        },
-        {
-          x: -336,
-          y: 0,
-          url: "http://localhost:10233/testMap.png"
-        },
-        {
-          x: 0,
-          y: -194,
-          url: "http://localhost:10233/testMap.png"
-        },
-        {
-          x: 0,
-          y: 0,
-          url: "http://localhost:10233/testMap.png"
-        },
-        {
-          x: 0,
-          y: 194,
-          url: "http://localhost:10233/testMap.png"
-        },
-        {
-          x: 336,
-          y: 0,
-          url: "http://localhost:10233/testMap.png"
-        },
-        {
-          x: 336,
-          y: 194,
-          url: "http://localhost:10233/testMap.png"
-        },
-        {
-          x: -336,
-          y: 194,
-          url: "http://localhost:10233/testMap.png"
-        },
-        {
-          x: 336,
-          y: -194,
-          url: "http://localhost:10233/testMap.png"
-        }
       ],
       drawList: [],
       drawInterval: 0
     };
   },
   mounted() {
+    this.initImageList();
     this.initDraw();
     this.drawMachine();
   },
@@ -82,6 +38,19 @@ export default {
     clearInterval(this.drawInterval);
   },
   methods: {
+    initImageList() {
+      let count = 0;
+      for (let i = 12; i > 0; i --) {
+        for (let j = 0; j < 12; j ++) {
+          count += 1
+          this.imageList.push({
+            x: (this.imageSize[0] * j) - (6 * this.imageSize[0]),
+            y: (this.imageSize[1] * i) - (6 * this.imageSize[1]),
+            url: "/map_images/images/image_map_" + count + ".jpg"
+          });
+        }
+      }
+    },
     initDraw() {
       var canvas = document.getElementById("canvas");
       this.canvasContext = canvas.getContext("2d");
@@ -92,16 +61,19 @@ export default {
       );
     },
     drawMachine() {
-      this.drawInterval = setInterval(() => {
-        this.drawList.forEach((draw) => {
-          draw();
-        });
-        this.drawList = [];
-      }, .5);
+      requestAnimationFrame( this.drawMachine );
+      this.drawList.forEach((draw) => {
+        draw();
+      });
+      this.drawList = [];
     },
     drawImages() {
-      this.canvasContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+      // this.canvasContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
       this.imageList.forEach(img => {
+        if (Math.abs((this.imageScaling / 0.5 * img.x) - (this.imageScaling / 0.5 * this.canvasCenter[0])) > (6 * this.imageSize[0]) * this.imageScaling / 0.5 && 
+        Math.abs((this.imageScaling / 0.5 * img.y) - (this.imageScaling / 0.5 * this.canvasCenter[1])) > (6 * this.imageSize[1]) * this.imageScaling / 0.5) {
+          return;
+        }
         const image = new Image();
         image.src = img.url;
 
@@ -123,8 +95,8 @@ export default {
       });
     },
     changeImageScaling(value) {
-      if(value <= 0) {
-        value = 1;
+      if(value <= 0.1) {
+        value = 0.125;
         this.$message.warning("已到最小缩放");
       }
       this.imageScaling = value;
