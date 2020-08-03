@@ -46,7 +46,7 @@ export default {
           this.imageList.push({
             x: (this.imageSize[0] * j) - (6 * this.imageSize[0]),
             y: (this.imageSize[1] * i) - (6 * this.imageSize[1]),
-            url: "/map_images/images/image_map_" + count + ".jpg"
+            url: "http://ybh.douxz.work/map_images/images/image_map_" + count + ".jpg"
           });
         }
       }

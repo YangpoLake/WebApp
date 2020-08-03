@@ -4,7 +4,7 @@
       <el-page-header @back="goBack">
         <template slot="content">
           <i class="iconfont icon-weighing-scale2"></i>
-          <span>{{this.$t("tourist.activity")}}</span>
+          <span>{{this.$t("tourist.strategy")}}</span>
         </template>
       </el-page-header>
     </div>
@@ -17,7 +17,7 @@
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="getTableData">{{$t('botton.search')}}</el-button>
-              <el-button type="success" @click="showActivityFormDialop(null, {})">{{$t('botton.create')}}</el-button>
+              <el-button type="success" @click="showStrategyFormDialop(null, {})">{{$t('botton.create')}}</el-button>
               <el-button
                 type="danger"
                 @click="showDeleteDialop"
@@ -37,7 +37,7 @@
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column prop="title" :label="$t('tourist.title')">
             <template slot-scope="scope">
-              <el-button type="text" @click="showActivityFormDialop(scope.row.id, scope.row)">{{ scope.row.title }}</el-button>
+              <el-button type="text" @click="showStrategyFormDialop(scope.row.id, scope.row)">{{ scope.row.title }}</el-button>
             </template>
           </el-table-column>
           <el-table-column prop="image_url" :label="$t('tourist.image_url')">
@@ -63,17 +63,17 @@
         ></el-pagination>
       </div>
     </div>
-    <activity-formDialop ref="ActivityFormDialop" @success="getTableData" />
+    <strategy-form-dialop ref="StrategyFormDialop" @success="getTableData" />
     <delete-dialop ref="DeleteDialop" @confirm="deleteData" />
   </div>
 </template>
 
 <script>
-import { getActivityByPage, deleteActivityById } from "@/api/activity";
-import ActivityFormDialop from "./components/activityFormDialop";
+import { getStrategyByPage, deleteStrategyById } from "@/api/strategy";
+import StrategyFormDialop from "./components/strategyFormDialop";
 import DeleteDialop from "@/components/Dialops/deleteDialop";
 export default {
-  components: { ActivityFormDialop, DeleteDialop },
+  components: { StrategyFormDialop, DeleteDialop },
   data() {
     return {
       loading: false,
@@ -94,7 +94,7 @@ export default {
     },
     getTableData() {
       this.loading = true;
-      getActivityByPage({
+      getStrategyByPage({
         page: this.tableCurrentPage,
         page_size: this.tableCurrentPageSize
       }).then((res) => {
@@ -114,12 +114,12 @@ export default {
     tableSelectionChange(val) {
       this.tableSelected = val;
     },
-    showActivityFormDialop(id, formData) {
-      this.$refs.ActivityFormDialop.init(id, formData);
+    showStrategyFormDialop(id, formData) {
+      this.$refs.StrategyFormDialop.init(id, formData);
     },
     showDeleteDialop() {
       if (this.tableSelected.length < 1) {
-        this.$message.warning("请至少选择一个活动");
+        this.$message.warning("请至少选择一个攻略");
       }
       const deleteList = [];
       this.tableSelected.forEach((selected) => {
@@ -134,7 +134,7 @@ export default {
       const allPromise = [];
 
       list.forEach((item) => {
-        allPromise.push(deleteActivityById(item.id));
+        allPromise.push(deleteStrategyById(item.id));
       });
 
       Promise.all(allPromise).then(() => {

@@ -1,4 +1,4 @@
-// import { getToken as login, destroyToken as logout } from '@/api/token'
+import { login } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -32,17 +32,18 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo;
     return new Promise((resolve, reject) => {
-      commit('SET_TOKEN', "99009988");
-      setToken(99009988);
-      resolve();
-      // login({ username: username.trim(), password: password }).then(response => {
-      //   const { data } = response;
-      //   commit('SET_TOKEN', data.token);
-      //   setToken(data.token);
-      //   resolve();
-      // }).catch(error => {
-      //   reject(error);
-      // })
+      login(username.trim(), password).then(response => {
+        if (response.data) {
+          const { data } = response;
+          commit('SET_TOKEN', data);
+          setToken(data);
+          resolve();
+        } else {
+          reject(new Error());
+        }
+      }).catch(error => {
+        reject(error);
+      })
     })
   },
 

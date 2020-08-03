@@ -33,6 +33,7 @@
 
     "tourist": "游客",
     "activity": "活动",
+    "strategy": "攻略",
     "feedback": "评论反馈",
     "banner": "Banner海报",
 
@@ -165,6 +166,7 @@
   "tourist": {
     "tourist": "游客",
     "activity": "活动",
+    "strategy": "攻略",
     "feedback": "评论反馈",
     "banner": "Banner海报",
 

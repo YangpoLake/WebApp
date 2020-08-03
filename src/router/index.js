@@ -173,6 +173,12 @@ export const constantRoutes = [
         meta: { title: 'menu.activity' },
       },
       {
+        path: 'strategy',
+        name: 'Strategy',
+        component: () => import('@/views/tourist/strategy'),
+        meta: { title: 'menu.strategy' },
+      },
+      {
         path: 'feedback',
         name: 'Feedback',
         component: () => import('@/views/tourist/feedback'),
